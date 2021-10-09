@@ -144,10 +144,10 @@ const styles = new StyleSheet.create({
     //paddingBottom: 5,
   },
   circle: {
-    width: 100,
-    height: 150,
+    width: 80,
+    height: 120,
     borderRadius: 10,
-    borderWidth: 3,
+    borderWidth: 0,
     borderColor: "#000",
   },
   superCircle: {

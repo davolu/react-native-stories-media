@@ -5,6 +5,7 @@ import {
   NativeTouchEvent,
   StyleSheet,
   Text,
+  Image,
   View,
   TouchableOpacity,
 } from "react-native";
@@ -16,10 +17,11 @@ import { NodePlayerView } from 'react-native-nodemediaclient';
 
 import Story from "./Story";
 import UserView from "./UserView";
+import onGoingLiveStreamBar from './onGoingLiveStreamBar';
 import Readmore from "./Readmore";
 import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
-
+ 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 type Props = {
@@ -142,6 +144,9 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       config={config}
       style={styles.container}
     >
+
+               
+    
       <TouchableOpacity
         activeOpacity={1}
         delayLongPress={500}
@@ -154,9 +159,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           {
             dataStories.isOnLiveStream ? 
             <NodePlayerView 
-               style={{ height: 500, width:'100%', marginTop:'10%', flex:1 }}
-               inputUrl={dataStories.liveStreamDetails.downstreamUrl}
-               scaleMode={"ScaleAspectFit"}
+               style={{ height: '60%', width:'100%',  marginTop:'30%'}}
+               inputUrl={dataStories.liveStreamDetails.upstreamUrl}
                bufferTime={300}
                maxBufferTime={1000}
                autoplay={true}
@@ -172,10 +176,6 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           />
           {loading()}
           
-        
-          </View>
-          }
-           
           <UserView
             name={dataStories.isOnLiveStream?dataStories.username+ " is Live" : dataStories.username}
             profile={dataStories.profile}
@@ -183,8 +183,40 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
             onClosePress={props.onClose}
           />
 
-        
- 
+          </View>
+          }
+           
+           <View style={[styles.topHeaderDiv,{padding:20}]}>
+
+                <View style={styles.flex2View}>
+                <TouchableOpacity  onPress={props.onClose}>
+                <Image source={require('./imgs/cancel-icon.png')} 
+                  style={styles.cancelbtn}
+                  />
+                </TouchableOpacity>
+                
+                </View>
+
+                <View style={[styles.flex2View,{flexDirection:'row', 
+                alignItems:'center',
+                alignSelf:'center',
+                justifyContent:'center',
+                backgroundColor:'#000'
+              }]}>   
+                <Image source={require('./imgs/show.png')} 
+                  style={styles.cancelbtn}
+                  />
+                <Text style={styles.colorCounter}> 1</Text>
+                </View>
+
+                
+                <View style={[styles.flex2View]}>
+
+                </View>
+           
+
+           </View>
+            
 
           {isReadMore && (
             <Readmore title={props.textReadMore} onReadMore={onReadMoreOpen} />
@@ -227,6 +259,25 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     // paddingTop: 30,
+  },
+  colorCounter:{
+  color:"#fff" 
+  },
+  topHeaderDiv:{
+    flexDirection: "row",
+    position: "absolute",
+    backgroundColor:"#000",
+    top: 55,
+    width: "98%",
+    alignItems: "center",
+  },
+  cancelbtn:{
+    height:15,
+    width:15,
+    resizeMode:'contain'
+  },
+  flex2View:{
+    flex:2
   },
   progressBarArray: {
     flexDirection: "row",
