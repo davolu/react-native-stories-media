@@ -8,6 +8,7 @@ import {
   Image,
   View,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 
 import { WebView } from "react-native-webview";
@@ -138,14 +139,15 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <GestureRecognizer
+     <GestureRecognizer
       onSwipeDown={onSwipeDown}
       onSwipeUp={onSwipeUp}
       config={config}
       style={styles.container}
     >
 
-               
+      <SafeAreaView> 
+      
     
       <TouchableOpacity
         activeOpacity={1}
@@ -174,6 +176,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
             onVideoLoaded={onVideoLoaded}
             story={story}
           />
+          
           {loading()}
           
           <UserView
@@ -186,6 +189,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           </View>
           }
            
+           {
+             dataStories.isOnLiveStream ?
            <View style={[styles.topHeaderDiv,{padding:20}]}>
 
                 <View style={styles.flex2View}>
@@ -212,10 +217,12 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
                 
                 <View style={[styles.flex2View]}>
 
-                </View>
+                </View> 
            
 
            </View>
+           :<></>
+            }
             
 
           {isReadMore && (
@@ -247,9 +254,10 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
         </Modal>
       </TouchableOpacity>
     
-    
+      </SafeAreaView>
+
     </GestureRecognizer>
-  );
+   );
 };
 
 const styles = StyleSheet.create({

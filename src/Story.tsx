@@ -34,8 +34,9 @@ const Story = (props: Props) => {
           source={{uri: url[0]}}
           onLoadEnd={props.onImageLoaded}
           style={styles.content}
-          resizeMode="stretch"
+          resizeMode="contain"
           width={ScreenWidth}
+        
         />
       ) : (
         <Video

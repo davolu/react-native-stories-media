@@ -11,7 +11,11 @@ import {
 import { StoryType } from "./src";
 
 const { CubeNavigationHorizontal } = require("react-native-3dcube-navigation");
-
+import {
+  widthPercentageToDP as wp2dp,
+  heightPercentageToDP as hp2dp,
+} from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/Ionicons';
 import StoryContainer from "./src/StoryContainer";
 
 type Props = {
@@ -27,6 +31,12 @@ const Stories = (props: Props) => {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
   const [currentScrollValue, setCurrentScrollValue] = useState(0);
   const modalScroll = useRef(null);
+
+  const baseWidth = 375;
+  const baseHeight = 811;
+
+  const wp = wp2dp((72 / baseWidth) * 100 + '%');
+  const hp = hp2dp((119 / baseHeight) * 100 + '%');
 
   const onStorySelect = (index) => {
     setCurrentUserIndex(index);
@@ -87,18 +97,28 @@ const Stories = (props: Props) => {
           <View style={styles.boxStory}>
             <TouchableOpacity onPress={() => onStorySelect(index)}>
               <View style={[styles.superCircle, props.containerAvatarStyle]}>
+            { item.isOnLiveStream ?
+              <View style={styles.videoIconContainer}>
+                 <Icon name="videocam" color="white" />
+               </View>
+               :
+               <></>
+             } 
                 <Image
-                  style={[styles.circle, props.avatarStyle]}
+                  style={[styles.circle, props.avatarStyle,{
+                    width:wp,
+                    height:hp
+                  }]}
                   source={{ uri: item.profile }}
                 />
               </View>
-
-              <Text style={[styles.title, props.titleStyle]}>{item.title}</Text>
+              
+              <Text style={[styles.title, props.titleStyle]}>{item.username}</Text>
             </TouchableOpacity>
           </View>
         )}
       />
-
+      
       <Modal
         animationType="slide"
         transparent={false}
@@ -135,7 +155,7 @@ const Stories = (props: Props) => {
 
 const styles = new StyleSheet.create({
   boxStory: {
-    marginLeft: 15,
+    marginLeft: 0,
   },
   ItemSeparator: { height: 1, backgroundColor: "#ccc" },
   container: {
@@ -159,9 +179,25 @@ const styles = new StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 8,
+    fontSize: 12,
+    color:'#fff',
     textAlign: "center",
   },
+ 
+  videoIconContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#1FCC79",
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 3,
+    zIndex:2,
+    top: 3,
+   
+  },
+  
 });
 
 export default Stories;
