@@ -17,7 +17,7 @@ export type StoryType = {
   title?: string;
 };
 
-export type liveStreamDetailsType = {
+export type live_stream_detailsType = {
   _id?: number;
   downstreamUrl?: string;
  
@@ -26,10 +26,10 @@ export type liveStreamDetailsType = {
 export type StoriesType = {
   username?: string;
   profile?: string;
-  isOnLiveStream?: string;
+  is_live_stream?: string;
   title?: string;
   storyid?: number;
   stories?: Array<StoryType>;
-  liveStreamDetails?: Array<liveStreamDetailsType>;
+  live_stream_details?: Array<live_stream_detailsType>;
 
 };

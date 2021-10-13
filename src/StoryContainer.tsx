@@ -159,10 +159,10 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       >
         <View style={styles.container}>
           {
-            dataStories.isOnLiveStream ? 
+            dataStories.is_live_stream ? 
             <NodePlayerView 
                style={{ height: '60%', width:'100%',  marginTop:'30%'}}
-               inputUrl={dataStories.liveStreamDetails.upstreamUrl}
+               inputUrl={dataStories.live_stream_details.upstreamUrl}
                bufferTime={300}
                maxBufferTime={1000}
                autoplay={true}
@@ -180,9 +180,9 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           {loading()}
           
           <UserView
-            name={dataStories.isOnLiveStream?dataStories.username+ " is Live" : dataStories.username}
+            name={dataStories.is_live_stream?dataStories.username+ " is Live" : dataStories.username}
             profile={dataStories.profile}
-            datePublication={stories[currentIndex].created}
+            datePublication={stories && stories[currentIndex].created}
             onClosePress={props.onClose}
           />
 
@@ -190,7 +190,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           }
            
            {
-             dataStories.isOnLiveStream ?
+             dataStories.is_live_stream ?
            <View style={[styles.topHeaderDiv,{padding:20}]}>
 
                 <View style={styles.flex2View}>
@@ -250,8 +250,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           onClosed={onReadMoreClose}
         >
           <View style={styles.bar} />
-          <WebView source={{ uri: stories[currentIndex].url_readmore }} />
-        </Modal>
+         </Modal>
       </TouchableOpacity>
     
       </SafeAreaView>

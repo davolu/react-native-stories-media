@@ -97,7 +97,7 @@ const Stories = (props: Props) => {
           <View style={styles.boxStory}>
             <TouchableOpacity onPress={() => onStorySelect(index)}>
               <View style={[styles.superCircle, props.containerAvatarStyle]}>
-            { item.isOnLiveStream ?
+            { item.is_live_stream ?
               <View style={styles.videoIconContainer}>
                  <Icon name="videocam" color="white" />
                </View>
