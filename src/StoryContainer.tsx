@@ -45,7 +45,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   const story = stories.length ? stories[currentIndex] : {};
   const { isReadMore }: StoryType = story || {};
 
-  // const onVideoLoaded = (length) => {
+   // const onVideoLoaded = (length) => {
   //   props.onVideoLoaded(length.duration);
   // };
 
@@ -56,6 +56,12 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       prevStory();
     }
   };
+
+  useEffect(() => 
+  {
+   
+   // setIsLiveStreamLoading(true);
+   }, [1]);
 
   const nextStory = () => {
     if (stories.length - 1 > currentIndex) {
@@ -78,6 +84,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       props.onStoryPrevious(false);
     }
   };
+
+
 
   const onImageLoaded = () => {
     setLoaded(true);
@@ -158,15 +166,22 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
         style={styles.container}
       >
         <View style={styles.container}>
+       
           {
             dataStories.is_live_stream ? 
-            <NodePlayerView 
+            <View>
+             <NodePlayerView 
                style={{ height: '60%', width:'100%',  marginTop:'30%'}}
                inputUrl={dataStories.live_stream_details.upstreamUrl}
                bufferTime={300}
                maxBufferTime={1000}
                autoplay={true}
                />
+                
+              
+              <ActivityIndicator color="white" />
+             
+            </View>
             :
             <View> 
             <Story
