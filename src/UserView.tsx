@@ -38,7 +38,6 @@ export default memo(function UserView(props: Props) {
       <View style={{ flex: 1 }}>
         <View style={styles.barUsername}>
           <Text style={styles.name}>{props.name}</Text>
-        
         </View>
 
         {/*<Text style={styles.time}>

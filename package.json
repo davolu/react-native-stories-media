@@ -1,36 +1,35 @@
 {
   "_args": [
     [
-      "react-native-stories-media@0.0.7",
+      "git+https://github.com/davolu/react-native-stories-media.git#master",
       "/Applications/XAMPP/xamppfiles/htdocs/Fanect/fanect-mobile"
     ]
   ],
-  "_from": "github:davolu/react-native-stories-media#master",
-  "_id": "react-native-stories-media@0.0.7",
+  "_from": "git+https://github.com/davolu/react-native-stories-media.git#master",
+  "_id": "react-native-stories-media@git+https://github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
   "_inBundle": false,
   "_integrity": "",
   "_location": "/react-native-stories-media",
   "_phantomChildren": {
     "create-react-class": "15.7.0",
+    "invariant": "2.2.4",
     "lodash": "4.17.21",
     "prop-types": "15.7.2",
     "yargs": "15.4.1"
   },
   "_requested": {
     "type": "git",
-    "raw": "react-native-stories-media@github:davolu/react-native-stories-media#master",
-    "name": "react-native-stories-media",
-    "escapedName": "react-native-stories-media",
-    "rawSpec": "github:davolu/react-native-stories-media#master",
-    "saveSpec": "github:davolu/react-native-stories-media#master",
-    "fetchSpec": null,
+    "raw": "git+https://github.com/davolu/react-native-stories-media.git#master",
+    "rawSpec": "git+https://github.com/davolu/react-native-stories-media.git#master",
+    "saveSpec": "git+https://github.com/davolu/react-native-stories-media.git#master",
+    "fetchSpec": "https://github.com/davolu/react-native-stories-media.git",
     "gitCommittish": "master"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "github:davolu/react-native-stories-media#b2c6204cce0af3420b4b24f8ed23a090c8d5bbcd",
-  "_spec": "react-native-stories-media@github:davolu/react-native-stories-media#master",
+  "_resolved": "git+https://github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
+  "_spec": "git+https://github.com/davolu/react-native-stories-media.git#master",
   "_where": "/Applications/XAMPP/xamppfiles/htdocs/Fanect/fanect-mobile",
   "author": {
     "name": "Guilherme Faustino",
@@ -40,7 +39,6 @@
   "bugs": {
     "url": "https://github.com/iguilhermeluis/react-native-stories-media/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "react-native-3dcube-navigation": "^1.0.4",
     "react-native-modalbox": "^1.7.1",

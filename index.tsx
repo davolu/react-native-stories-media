@@ -36,12 +36,14 @@ const Stories = (props: Props) => {
   const baseHeight = 811;
 
   const wp = wp2dp((72 / baseWidth) * 100 + '%');
-  const hp = hp2dp((119 / baseHeight) * 100 + '%');
+  const hp = hp2dp((119 / baseHeight) * 100 + '%'); 
+
+
 
   const onStorySelect = (index) => {
     setCurrentUserIndex(index);
     setModel(true);
-  };
+   };
 
   const onStoryClose = () => {
     setModel(false);

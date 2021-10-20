@@ -15,6 +15,7 @@ import { WebView } from "react-native-webview";
 import Modal from "react-native-modalbox";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { NodePlayerView } from 'react-native-nodemediaclient';
+import Video from 'react-native-video';
 
 import Story from "./Story";
 import UserView from "./UserView";
@@ -166,21 +167,24 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
         style={styles.container}
       >
         <View style={styles.container}>
-       
+          
           {
             dataStories.is_live_stream ? 
             <View>
-             <NodePlayerView 
-               style={{ height: '60%', width:'100%',  marginTop:'30%'}}
-               inputUrl={dataStories.live_stream_details.upstreamUrl}
-               bufferTime={300}
-               maxBufferTime={1000}
-               autoplay={true}
-               />
-                
-              
-              <ActivityIndicator color="white" />
-             
+            <NodePlayerView 
+              style={{height: '70%', width:500, 
+              resizeMode:'contain',
+              marginTop:'30%', 
+              borderWidth:2 }}
+              inputUrl={dataStories.live_stream_details.downstreamUrl}
+              bufferTime={300}
+              maxBufferTime={1000}
+              autoplay={false}
+               /> 
+               {/* <Text style={{color:'#fff', fontSize:8}}>
+                {dataStories.live_stream_details.downstreamUrl}
+              </Text>*/}
+              <ActivityIndicator color="white" /> 
             </View>
             :
             <View> 
