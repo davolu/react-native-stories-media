@@ -23,7 +23,8 @@ import onGoingLiveStreamBar from './onGoingLiveStreamBar';
 import Readmore from "./Readmore";
 import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
- 
+import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
+
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 type Props = {
@@ -133,6 +134,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     directionalOffsetThreshold: 80,
   };
 
+  
+
   const onSwipeDown = () => {
     if (!isModelOpen) {
       props.onClose();
@@ -171,7 +174,24 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           {
             dataStories.is_live_stream ? 
             <View>
-            <NodePlayerView 
+       
+        <View style={{ flex: 1, flexDirection: 'column', 
+        paddingHorizontal: 10, 
+        width:500,
+        paddingVertical: 10 }}>
+        <OTSession 
+             apiKey={"46711382"} 
+             sessionId={"2_MX40NjcxMTM4Mn5-MTYzNTUxMjkyNjIyNn5XWkN1LzB5Y2kzTHltUUlnZjRORHNQSWJ-fg"} 
+             token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9OWYwMTM5YTZmODE0NTJmZGQ4ZGJmNmEzMzQ2YzI3M2QyOWIyZWNjNTpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOVFV4TWpreU5qSXlObjVYV2tOMUx6QjVZMmt6VEhsdFVVbG5aalJPUkhOUVNXSi1mZyZjcmVhdGVfdGltZT0xNjM1NTEyOTUxJm5vbmNlPTAuMTg4Nzk1MTAzMDcwOTY4NyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjM4MTA0OTUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9"}
+           
+                   >
+          <OTSubscriber style={{ width: 500,    height: "95%" }} />
+         </OTSession>
+         </View>
+
+            
+
+          {/* <NodePlayerView 
               style={{height: '70%', width:500, 
               resizeMode:'contain',
               marginTop:'30%', 
@@ -180,11 +200,11 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
               bufferTime={300}
               maxBufferTime={1000}
               autoplay={false}
-               /> 
+               />  */}
                {/* <Text style={{color:'#fff', fontSize:8}}>
                 {dataStories.live_stream_details.downstreamUrl}
-              </Text>*/}
-              <ActivityIndicator color="white" /> 
+              </Text>
+              <ActivityIndicator color="white" /> */}
             </View>
             :
             <View> 
@@ -210,7 +230,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
            
            {
              dataStories.is_live_stream ?
-           <View style={[styles.topHeaderDiv,{padding:20}]}>
+            <View style={[styles.topHeaderDiv,{padding:20}]}>
 
                 <View style={styles.flex2View}>
                 <TouchableOpacity  onPress={props.onClose}>
@@ -225,7 +245,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
                 alignItems:'center',
                 alignSelf:'center',
                 justifyContent:'center',
-                backgroundColor:'#000'
+              
               }]}>   
                 <Image source={require('./imgs/show.png')} 
                   style={styles.cancelbtn}
@@ -292,7 +312,7 @@ const styles = StyleSheet.create({
   topHeaderDiv:{
     flexDirection: "row",
     position: "absolute",
-    backgroundColor:"#000",
+    backgroundColor:"rgba(30,30,30,0.35)",
     top: 55,
     width: "98%",
     alignItems: "center",
