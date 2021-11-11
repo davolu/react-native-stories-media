@@ -24,6 +24,7 @@ type Props = {
   avatarStyle?: StyleSheet.Styles;
   titleStyle?: StyleSheet.Styles;
   textReadMore?: string;
+ // userDatas:string;
 };
 
 const Stories = (props: Props) => {
@@ -103,7 +104,7 @@ const Stories = (props: Props) => {
               <View style={styles.videoIconContainer}>
                  <Icon name="videocam" color="white" />
                </View>
-               :
+               :  
                <></>
              } 
                 <Image
@@ -115,7 +116,9 @@ const Stories = (props: Props) => {
                 />
               </View>
               
-              <Text style={[styles.title, props.titleStyle]}>{item.username}</Text>
+              <Text style={[styles.title, props.titleStyle]}>{item.username}
+              
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -145,6 +148,7 @@ const Stories = (props: Props) => {
               onStoryNext={onStoryNext}
               onStoryPrevious={onStoryPrevious}
               dataStories={item}
+              userDatas={props.userDatas}
               isNewStory={index !== currentUserIndex}
               textReadMore={props.textReadMore}
             />

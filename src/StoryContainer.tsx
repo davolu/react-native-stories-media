@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -9,6 +9,8 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
+  TextInput,
+  FlatList
 } from "react-native";
 
 import { WebView } from "react-native-webview";
@@ -24,11 +26,14 @@ import Readmore from "./Readmore";
 import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
+ 
+import { style } from "styled-system";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 type Props = {
   dataStories: StoriesType;
+ // userDatas: StoriesType;
   onStoryNext: (boolean) => void;
   onStoryPrevious: (boolean) => void;
   onClose: () => void;
@@ -37,13 +42,29 @@ type Props = {
 };
 
 const StoryContainer: React.FC<Props> = (props: Props) => {
-  const { dataStories } = props;
+  const { dataStories, userDatas } = props;
   const { stories = [] } = dataStories || {};
+  const { userdata = [] } = userDatas || {};
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModelOpen, setModel] = useState(false);
   const [isPause, setIsPause] = useState(false);
   const [isLoaded, setLoaded] = useState(false);
   const [duration, setDuration] = useState(3);
+  const [commentText,setCommentText] = useState("");
+  const [signalChat,setSignalChat] = useState({
+  
+      data: '',
+      type: '', 
+    
+  });
+  const [messages,setMessages] = useState([]);
+  const [chatDataObj,setChatDataObj] = useState([]);
+
+  const [text,setText] = useState();
+
+  //const sessionRef = useRef<typeof OTSession>(null);
+  const sessionRef = useRef(null);
+
   const story = stories.length ? stories[currentIndex] : {};
   const { isReadMore }: StoryType = story || {};
 
@@ -61,7 +82,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
 
   useEffect(() => 
   {
-   
+    console.log(JSON.stringify(userDatas))
+    //sendSignal();
    // setIsLiveStreamLoading(true);
    }, [1]);
 
@@ -111,6 +133,53 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     setModel(false);
   };
 
+  const sessionEventHandlers  = { 
+    signal: msg => {
+      console.log("<====sessionEventHandlers signal: msg===> "+JSON.stringify(msg))
+    }
+  };
+  
+ 
+  const sendSignal =  () => {
+
+   // setMessages(oldvalue => [commentText,...oldvalue] );
+      //console.log(JSON.stringify(userDatas));
+            setMessages({
+              username:userDatas.user.username,
+              message:commentText,
+              avatar:userDatas.user.avatar
+          });
+
+    sessionRef.current.signal(
+        {
+            type: 'msg',
+            data:commentText+"-|-"+userDatas.user.avatar+"-|-"+userDatas.user.username,
+        },
+        function (error) {
+             if (error) { 
+             console.log('signal error: ' + error.message);
+            } else { 
+            console.log('signal sent');
+            }
+        }
+    ); 
+
+    setCommentText(" ");
+        
+  }; 
+
+   
+  
+ 
+ 
+
+
+  const _keyExtractor = (item, index) => index;
+  const  _renderItem = ({item}) => (
+    <Text style={styles.item}>--- hi {item.data}</Text>
+  );
+ 
+
   const loading = () => {
     if (!isLoaded) {
       return (
@@ -158,8 +227,44 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       style={styles.container}
     >
 
-      <SafeAreaView> 
+        
+     <View style={styles.chatBoxContainer}>
+           
+            <View style={styles.userImageContainer}>
+            <Image source={{uri:messages.avatar}} style={styles.userimage} />
+            </View>
+              
+             <View style={styles.chatCommentContainer}>
+             <View style={styles.chatCommentWidth}>
+             <Text style={styles.chatcomment}>{messages.message}</Text>
+             </View>
+             </View>
+   
+       
+     </View> 
       
+     
+ 
+      {
+            dataStories.is_live_stream ? 
+            <View  style={[styles.commentBox]}>
+               
+               <View  style={styles.commentBoxContainer}>  
+                  <TextInput placeholder="Commentss..." 
+                  placeholderTextColor={'white'} 
+                  onChangeText={(text) => { setCommentText(text) }}
+                  value={commentText}
+                  style={styles.textbox}/>
+                </View>
+                <TouchableOpacity
+                onPress={() => {  sendSignal() }}>
+                <Image source={require("./imgs/send-arrow-green.png")} />
+                </TouchableOpacity>
+                  
+            </View>
+      :
+      <></>  
+      }
     
       <TouchableOpacity
         activeOpacity={1}
@@ -173,9 +278,11 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           
           {
             dataStories.is_live_stream ? 
-            <View>
-       
-        <View style={{ flex: 1, flexDirection: 'column', 
+         <View>
+            
+        <View style={{ 
+        flex: 1, 
+        flexDirection: 'column', 
         paddingHorizontal: 10, 
         width:500,
         paddingVertical: 10 }}>
@@ -183,14 +290,17 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
              apiKey={"46711382"} 
              sessionId={"2_MX40NjcxMTM4Mn5-MTYzNTUxMjkyNjIyNn5XWkN1LzB5Y2kzTHltUUlnZjRORHNQSWJ-fg"} 
              token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9OWYwMTM5YTZmODE0NTJmZGQ4ZGJmNmEzMzQ2YzI3M2QyOWIyZWNjNTpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOVFV4TWpreU5qSXlObjVYV2tOMUx6QjVZMmt6VEhsdFVVbG5aalJPUkhOUVNXSi1mZyZjcmVhdGVfdGltZT0xNjM1NTEyOTUxJm5vbmNlPTAuMTg4Nzk1MTAzMDcwOTY4NyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjM4MTA0OTUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9"}
-           
-                   >
-          <OTSubscriber style={{ width: 500,    height: "95%" }} />
+             ref={sessionRef}
+             eventHandlers={sessionEventHandlers}
+
+
+         >
+          <OTSubscriber style={{ width: 500,    height: "100%" }} />
          </OTSession>
          </View>
 
+        
             
-
           {/* <NodePlayerView 
               style={{height: '70%', width:500, 
               resizeMode:'contain',
@@ -234,30 +344,37 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
 
                 <View style={styles.flex2View}>
                 <TouchableOpacity  onPress={props.onClose}>
-                <Image source={require('./imgs/cancel-icon.png')} 
+                <Image source={require('./imgs/cancel-icon-2.png')} 
                   style={styles.cancelbtn}
                   />
                 </TouchableOpacity>
                 
                 </View>
-
+              
                 <View style={[styles.flex2View,{flexDirection:'row', 
                 alignItems:'center',
                 alignSelf:'center',
                 justifyContent:'center',
-              
+                backgroundColor:'rgba(0, 0, 0, 0.4)', 
+                borderRadius:5,
+                padding:5
+            
               }]}>   
-                <Image source={require('./imgs/show.png')} 
-                  style={styles.cancelbtn}
+                <Image source={require('./imgs/eyes.png')} 
+                  style={styles.eyeiconbtn}
                   />
                 <Text style={styles.colorCounter}> 1</Text>
                 </View>
 
-                
-                <View style={[styles.flex2View]}>
-
+                <View style={[styles.flex2View,{flexDirection:'row', 
+                alignContent:'flex-end',
+                alignItems:'flex-end'
+              }]}>
+              
+              
                 </View> 
-           
+
+            
 
            </View>
            :<></>
@@ -291,9 +408,10 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           <View style={styles.bar} />
          </Modal>
       </TouchableOpacity>
-    
-      </SafeAreaView>
 
+   
+    
+ 
     </GestureRecognizer>
    );
 };
@@ -306,20 +424,65 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // paddingTop: 30,
   },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    color:'#fff',
+    height: 44,
+  },
   colorCounter:{
   color:"#fff" 
+  },
+  flexrowx:{
+   flexDirection:'row',
+   width:'100%'
   },
   topHeaderDiv:{
     flexDirection: "row",
     position: "absolute",
     backgroundColor:"rgba(30,30,30,0.35)",
-    top: 55,
-    width: "98%",
+    top: 50,
+    width: "100%",
     alignItems: "center",
   },
+  commentext:{
+    color:'#fff' 
+  },
+  commentBox:{
+   position: 'absolute',
+   zIndex:2,
+   top:'85%',
+   marginLeft:'0%',
+  // backgroundColor:'rgba(28, 28, 28, 0.4)',
+   width:'100%',
+   flexDirection:'row',
+   height:70,
+   borderRadius:20,
+   padding:11
+  },
+  commentBoxContainer:{
+  flex:5,
+  marginRight:'4%',
+  height:100
+  },
+  textbox:{
+    width:'100%',
+    backgroundColor:"#fff",
+ //   backgroundColor:'rgba(10,10,10,0.7)',
+    color:'#000',
+    padding:10,
+    height:40,
+    marginRight:'4%',
+    borderRadius:20
+  },
   cancelbtn:{
-    height:15,
-    width:15,
+    height:35,
+    width:35,
+    resizeMode:'contain'
+  },
+  eyeiconbtn:{
+    height:20,
+    width:20,
     resizeMode:'contain'
   },
   flex2View:{
@@ -377,6 +540,50 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
   },
+
+
+  /****   CHATBOX RELATED  */
+  chatBoxContainer: {
+    position:'absolute',
+    top:'70%',
+    left:'3%',
+    marginTop:'4%',
+    flexDirection:'row',
+   // height:500,
+    width:"90%",
+    zIndex: 3
+},
+userimage:{
+   width:36,  
+   height:36,
+   alignSelf:'center',
+   borderRadius:50
+   
+} ,
+chatcomment:{
+   color:"#fff",
+   width:'80%',
+
+},
+userImageContainer:{
+   flex:0.9,
+   textAlign:'center',
+   alignContent:"center",
+   justifyContent:'center'
+},
+chatCommentContainer:{
+   flex:3,
+},
+chatCommentWidth:{
+   backgroundColor: "rgba(28, 28, 28, 0.2)",
+   width:'85%',
+   borderRadius:10,
+   padding:3,
+   paddingLeft:2,
+   justifyContent:'center',
+   textAlign:'center'
+}
+
 });
 
 export default StoryContainer;
