@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput
 } from "react-native";
 import { StoryType } from "./src";
 
@@ -151,6 +152,8 @@ const Stories = (props: Props) => {
               userDatas={props.userDatas}
               isNewStory={index !== currentUserIndex}
               textReadMore={props.textReadMore}
+             
+
             />
           ))}
         </CubeNavigationHorizontal>

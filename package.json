@@ -1,12 +1,12 @@
 {
   "_args": [
     [
-      "git+https://github.com/davolu/react-native-stories-media.git#master",
+      "react-native-stories-media@git+https://github.com/davolu/react-native-stories-media.git#master",
       "/Applications/XAMPP/xamppfiles/htdocs/Fanect/fanect-mobile"
     ]
   ],
-  "_from": "git+https://github.com/davolu/react-native-stories-media.git#master",
-  "_id": "react-native-stories-media@git+https://github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
+  "_from": "react-native-stories-media@git+https://github.com/davolu/react-native-stories-media.git#master",
+  "_id": "react-native-stories-media@git+ssh://git@github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
   "_inBundle": false,
   "_integrity": "",
   "_location": "/react-native-stories-media",
@@ -19,7 +19,9 @@
   },
   "_requested": {
     "type": "git",
-    "raw": "git+https://github.com/davolu/react-native-stories-media.git#master",
+    "raw": "react-native-stories-media@git+https://github.com/davolu/react-native-stories-media.git#master",
+    "name": "react-native-stories-media",
+    "escapedName": "react-native-stories-media",
     "rawSpec": "git+https://github.com/davolu/react-native-stories-media.git#master",
     "saveSpec": "git+https://github.com/davolu/react-native-stories-media.git#master",
     "fetchSpec": "https://github.com/davolu/react-native-stories-media.git",
@@ -28,7 +30,7 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "git+https://github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
+  "_resolved": "git+ssh://git@github.com/davolu/react-native-stories-media.git#87f92b7f90857d2d2d4109f4a14c49b613998fa7",
   "_spec": "git+https://github.com/davolu/react-native-stories-media.git#master",
   "_where": "/Applications/XAMPP/xamppfiles/htdocs/Fanect/fanect-mobile",
   "author": {

@@ -9,7 +9,9 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
+  KeyboardAvoidingView,
   TextInput,
+  Platform,
   FlatList
 } from "react-native";
 
@@ -26,7 +28,8 @@ import Readmore from "./Readmore";
 import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
- 
+ import EmojiSelector from 'react-native-emoji-selector'
+
 import { style } from "styled-system";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -142,18 +145,29 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
  
   const sendSignal =  () => {
 
-   // setMessages(oldvalue => [commentText,...oldvalue] );
-      //console.log(JSON.stringify(userDatas));
-            setMessages({
+  //  setMessages(oldvalue => [commentText,...oldvalue] );
+      
+           /* setMessages({
               username:userDatas.user.username,
               message:commentText,
               avatar:userDatas.user.avatar
-          });
+          });*/  
 
-    sessionRef.current.signal(
+          setMessages([...messages, 
+            {
+              username:userDatas.user.username,
+              message:commentText,
+              avatar:userDatas.user.avatar
+          }]);
+
+        
+       // console.log("<<<<<sendSignal>>>>"+JSON.stringify(messages)+"<<<<end sendSignal>>>>");
+
+
+      sessionRef.current.signal(
         {
             type: 'msg',
-            data:commentText+"-|-"+userDatas.user.avatar+"-|-"+userDatas.user.username,
+            data: JSON.stringify(messages) //commentText+"-|-"+userDatas.user.avatar+"-|-"+userDatas.user.username,
         },
         function (error) {
              if (error) { 
@@ -170,14 +184,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
 
    
   
- 
- 
-
-
-  const _keyExtractor = (item, index) => index;
-  const  _renderItem = ({item}) => (
-    <Text style={styles.item}>--- hi {item.data}</Text>
-  );
+  
  
 
   const loading = () => {
@@ -226,35 +233,89 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       config={config}
       style={styles.container}
     >
-
+  <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      > 
         
-     <View style={styles.chatBoxContainer}>
-           
-            <View style={styles.userImageContainer}>
-            <Image source={{uri:messages.avatar}} style={styles.userimage} />
-            </View>
+
+        {
+             dataStories.is_live_stream ?
+            <View style={[styles.topHeaderDiv,{padding:0}]}>
+
+                <View style={styles.flex2View}>
+                <TouchableOpacity  onPress={props.onClose}>
+                <Image source={require('./imgs/cancel-icon-2.png')} 
+                  style={styles.cancelbtn}
+                  />
+                </TouchableOpacity>
+                
+                </View>
               
-             <View style={styles.chatCommentContainer}>
-             <View style={styles.chatCommentWidth}>
-             <Text style={styles.chatcomment}>{messages.message}</Text>
-             </View>
-             </View>
-   
-       
-     </View> 
+                <View style={[styles.flex2View,{flexDirection:'row', 
+                alignItems:'center',
+                alignSelf:'center',
+                justifyContent:'center',
+                backgroundColor:'rgba(0, 0, 0, 0.4)', 
+                borderRadius:5,
+                padding:5
+            
+              }]}>   
+                <Image source={require('./imgs/eyes.png')} 
+                  style={styles.eyeiconbtn}
+                  />
+                <Text style={styles.colorCounter}> 1</Text>
+                </View>
+
+                <View style={[styles.flex2View,{flexDirection:'row', 
+                alignContent:'flex-end',
+                alignItems:'flex-end'
+              }]}>
+              
+              
+                </View> 
+
+
+           </View>
+           :<></>
+            }
+
+        { 
+    messages && messages.map( (item, index)=>{
+      return(    
+        <View key={index} style={styles.chatBoxContainer}>
+
+         <View style={styles.userImageContainer}>
+        <Image source={{uri:item.avatar}} style={styles.userimage} />
+        </View>
+          
+         <View style={styles.chatCommentContainer}>
+         <View style={styles.chatCommentWidth}>
+         <Text style={styles.chatcomment}>{item.message}</Text>
+         </View>
+         </View>
+         </View>  
+           )
+          })
+
+          }
+         
+          
+      
+    
       
      
  
       {
             dataStories.is_live_stream ? 
             <View  style={[styles.commentBox]}>
-               
+ 
                <View  style={styles.commentBoxContainer}>  
                   <TextInput placeholder="Commentss..." 
                   placeholderTextColor={'white'} 
                   onChangeText={(text) => { setCommentText(text) }}
                   value={commentText}
-                  style={styles.textbox}/>
+                  style={styles.textbox}/> 
                 </View>
                 <TouchableOpacity
                 onPress={() => {  sendSignal() }}>
@@ -292,8 +353,6 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
              token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9OWYwMTM5YTZmODE0NTJmZGQ4ZGJmNmEzMzQ2YzI3M2QyOWIyZWNjNTpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOVFV4TWpreU5qSXlObjVYV2tOMUx6QjVZMmt6VEhsdFVVbG5aalJPUkhOUVNXSi1mZyZjcmVhdGVfdGltZT0xNjM1NTEyOTUxJm5vbmNlPTAuMTg4Nzk1MTAzMDcwOTY4NyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjM4MTA0OTUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9"}
              ref={sessionRef}
              eventHandlers={sessionEventHandlers}
-
-
          >
           <OTSubscriber style={{ width: 500,    height: "100%" }} />
          </OTSession>
@@ -315,6 +374,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
                 {dataStories.live_stream_details.downstreamUrl}
               </Text>
               <ActivityIndicator color="white" /> */}
+            
+
             </View>
             :
             <View> 
@@ -338,52 +399,10 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           </View>
           }
            
-           {
-             dataStories.is_live_stream ?
-            <View style={[styles.topHeaderDiv,{padding:20}]}>
-
-                <View style={styles.flex2View}>
-                <TouchableOpacity  onPress={props.onClose}>
-                <Image source={require('./imgs/cancel-icon-2.png')} 
-                  style={styles.cancelbtn}
-                  />
-                </TouchableOpacity>
-                
-                </View>
-              
-                <View style={[styles.flex2View,{flexDirection:'row', 
-                alignItems:'center',
-                alignSelf:'center',
-                justifyContent:'center',
-                backgroundColor:'rgba(0, 0, 0, 0.4)', 
-                borderRadius:5,
-                padding:5
-            
-              }]}>   
-                <Image source={require('./imgs/eyes.png')} 
-                  style={styles.eyeiconbtn}
-                  />
-                <Text style={styles.colorCounter}> 1</Text>
-                </View>
-
-                <View style={[styles.flex2View,{flexDirection:'row', 
-                alignContent:'flex-end',
-                alignItems:'flex-end'
-              }]}>
-              
-              
-                </View> 
-
+          
             
 
-           </View>
-           :<></>
-            }
-            
-
-          {isReadMore && (
-            <Readmore title={props.textReadMore} onReadMore={onReadMoreOpen} />
-          )}
+          
 
           <ProgressArray
             next={nextStory}
@@ -410,8 +429,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
       </TouchableOpacity>
 
    
-    
- 
+        
+      </KeyboardAvoidingView>
     </GestureRecognizer>
    );
 };
@@ -439,11 +458,13 @@ const styles = StyleSheet.create({
   },
   topHeaderDiv:{
     flexDirection: "row",
-    position: "absolute",
-    backgroundColor:"rgba(30,30,30,0.35)",
-    top: 50,
-    width: "100%",
-    alignItems: "center",
+   // position: "absolute",
+   // backgroundColor:"rgba(30,30,30,0.35)",
+    top: "10%",
+    zIndex:3,
+ 
+    width: "90%",
+    //alignItems: "center",
   },
   commentext:{
     color:'#fff' 
@@ -461,10 +482,11 @@ const styles = StyleSheet.create({
    padding:11
   },
   commentBoxContainer:{
-  flex:5,
-  marginRight:'4%',
-  height:100
-  },
+    flex:5,
+    marginRight:'4%',
+     height:100
+    },
+
   textbox:{
     width:'100%',
     backgroundColor:"#fff",
@@ -473,7 +495,7 @@ const styles = StyleSheet.create({
     padding:10,
     height:40,
     marginRight:'4%',
-    borderRadius:20
+    borderRadius:20,
   },
   cancelbtn:{
     height:35,
@@ -544,12 +566,13 @@ const styles = StyleSheet.create({
 
   /****   CHATBOX RELATED  */
   chatBoxContainer: {
-    position:'absolute',
-    top:'70%',
-    left:'3%',
-    marginTop:'4%',
+   // position:'absolute',
+    top:'90%',
+    left:'0%',
+    marginTop:'3.5%',
+    //marginTop:'4%',
     flexDirection:'row',
-   // height:500,
+ //   height:100,
     width:"90%",
     zIndex: 3
 },
