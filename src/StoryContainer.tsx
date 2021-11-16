@@ -18,8 +18,7 @@ import {
 import { WebView } from "react-native-webview";
 import Modal from "react-native-modalbox";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { NodePlayerView } from 'react-native-nodemediaclient';
-import Video from 'react-native-video';
+ import Video from 'react-native-video';
 
 import Story from "./Story";
 import UserView from "./UserView";
@@ -62,6 +61,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   });
   const [messages,setMessages] = useState([]);
   const [chatDataObj,setChatDataObj] = useState([]);
+  const [streamProperties, setStreamProperties] = useState({});
 
   const [text,setText] = useState();
 
@@ -70,8 +70,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
 
   const story = stories.length ? stories[currentIndex] : {};
   const { isReadMore }: StoryType = story || {};
-
-   // const onVideoLoaded = (length) => {
+    // const onVideoLoaded = (length) => {
   //   props.onVideoLoaded(length.duration);
   // };
 
@@ -112,6 +111,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     }
   };
 
+ 
 
 
   const onImageLoaded = () => {
@@ -136,11 +136,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     setModel(false);
   };
 
-  const sessionEventHandlers  = { 
-    signal: msg => {
-      console.log("<====sessionEventHandlers signal: msg===> "+JSON.stringify(msg))
-    }
-  };
+  
   
  
   const sendSignal =  () => {
@@ -210,6 +206,56 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     directionalOffsetThreshold: 80,
   };
 
+
+  const sessionEventHandlersSession = {
+    streamCreated: event => {
+      const streamProperties = {...streamProperties, [event.streamId]: {
+        subscribeToAudio: false,
+        subscribeToVideo: true,
+        style: {
+          width: 400,
+          height: 300,
+        },
+      }};
+      setStreamProperties({ streamProperties });
+    },
+  };
+
+
+  const subscriberProperties = {
+    subscribeToAudio: false,
+    subscribeToVideo: true,
+  };
+
+ 
+
+  const subscriberEventHandlers = {
+    connected(event) {
+      console.log('connected', event);
+    },
+    disconnected(event) {
+      console.log('disconnected', event);
+    },
+    videoDataReceived(event) {
+      console.log('videoDataReceived', event);
+    },
+    videoEnabled(event) {
+      console.log('\n\n\n*****####videoEnabled', event);
+    },
+    videoNetworkStats(event) {
+      console.log('videoNetworkStats', event);
+    },
+    otrnError(err){
+      console.log('\n\n\n*****####otrnError', err);
+    },
+    error(err){
+      console.log('\n\n\n*****####error', err);
+
+    }
+    
+    
+  };
+
   
 
   const onSwipeDown = () => {
@@ -227,7 +273,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   };
 
   return (
-     <GestureRecognizer
+     <View
       onSwipeDown={onSwipeDown}
       onSwipeUp={onSwipeUp}
       config={config}
@@ -349,18 +395,31 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
         paddingVertical: 10 }}>
         <OTSession 
              apiKey={"46711382"} 
-             sessionId={"2_MX40NjcxMTM4Mn5-MTYzNTUxMjkyNjIyNn5XWkN1LzB5Y2kzTHltUUlnZjRORHNQSWJ-fg"} 
-             token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9OWYwMTM5YTZmODE0NTJmZGQ4ZGJmNmEzMzQ2YzI3M2QyOWIyZWNjNTpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOVFV4TWpreU5qSXlObjVYV2tOMUx6QjVZMmt6VEhsdFVVbG5aalJPUkhOUVNXSi1mZyZjcmVhdGVfdGltZT0xNjM1NTEyOTUxJm5vbmNlPTAuMTg4Nzk1MTAzMDcwOTY4NyZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjM4MTA0OTUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9"}
+             sessionId={"2_MX40NjcxMTM4Mn5-MTYzNzA3MzA4OTU0Mn5waHF3dytnMHlHQ2tNUS8vZVZOWGpmMHV-fg"} 
+             token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9NGI3ZDM1Y2FiODY2YzZjMGZkNDQ2ZjNjZDc3NWRjOTkxODgxY2Y1NjpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOekEzTXpBNE9UVTBNbjV3YUhGM2R5dG5NSGxIUTJ0TlVTOHZaVlpPV0dwbU1IVi1mZyZjcmVhdGVfdGltZT0xNjM3MDczMTUyJm5vbmNlPTAuODQ5OTE1OTgxNTk5MDU1MyZyb2xlPXN1YnNjcmliZXImZXhwaXJlX3RpbWU9MTYzOTY2NTE1MSZjb25uZWN0aW9uX2RhdGE9U3Vic2NyaWJlciZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="}
              ref={sessionRef}
-             eventHandlers={sessionEventHandlers}
-         >
-          <OTSubscriber style={{ width: 500,    height: "100%" }} />
+             eventHandlers={sessionEventHandlersSession}>
+
+               
+          <OTSubscriber style={{ width: 500,  borderColor:'red', 
+          borderWidth:2,  height: "100%" }} 
+          properties={subscriberProperties}
+          eventHandlers={subscriberEventHandlers}
+          streamProperties={streamProperties}
+          
+           />
          </OTSession>
          </View>
 
         
             
-          {/* <NodePlayerView 
+          {/*
+          
+          OTSession -   eventHandlers={sessionEventHandlers}
+          properties={subscriberProperties}
+          eventHandlers={subscriberEventHandlers}
+
+          <NodePlayerView 
               style={{height: '70%', width:500, 
               resizeMode:'contain',
               marginTop:'30%', 
@@ -431,7 +490,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
    
         
       </KeyboardAvoidingView>
-    </GestureRecognizer>
+    </View>
    );
 };
 
