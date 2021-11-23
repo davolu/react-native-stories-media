@@ -28,6 +28,7 @@ import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
  import EmojiSelector from 'react-native-emoji-selector'
+ import AgoraUIKit from 'agora-rn-uikit';
 
 import { style } from "styled-system";
 
@@ -222,6 +223,38 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   };
 
 
+  const rtcProps = {
+    appId: '47bc36b988eb44a69a36c671863beaf6',
+    channel: 'test',
+    enableVideo:false,
+    mode:1,
+    role:2,
+    enableAudio:false,
+    activeSpeaker:false,
+    layout:1
+
+  };
+
+  const callbacks = {
+    EndCall: () => { 
+    },
+   }; 
+
+   const styleProps={
+    UIKitContainer:{
+         borderWidth:1,
+        borderColor:'red',
+         marginTop:'15%',
+         height: '80%', 
+         width: '100%'
+    },
+    localBtnContainer:{
+      display:"none"
+      }
+   }
+
+   
+   
   const subscriberProperties = {
     subscribeToAudio: false,
     subscribeToVideo: true,
@@ -393,7 +426,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
         paddingHorizontal: 10, 
         width:500,
         paddingVertical: 10 }}>
-        <OTSession 
+       {/* <OTSession 
              apiKey={"46711382"} 
              sessionId={"2_MX40NjcxMTM4Mn5-MTYzNzA3MzA4OTU0Mn5waHF3dytnMHlHQ2tNUS8vZVZOWGpmMHV-fg"} 
              token={"T1==cGFydG5lcl9pZD00NjcxMTM4MiZzaWc9NGI3ZDM1Y2FiODY2YzZjMGZkNDQ2ZjNjZDc3NWRjOTkxODgxY2Y1NjpzZXNzaW9uX2lkPTJfTVg0ME5qY3hNVE00TW41LU1UWXpOekEzTXpBNE9UVTBNbjV3YUhGM2R5dG5NSGxIUTJ0TlVTOHZaVlpPV0dwbU1IVi1mZyZjcmVhdGVfdGltZT0xNjM3MDczMTUyJm5vbmNlPTAuODQ5OTE1OTgxNTk5MDU1MyZyb2xlPXN1YnNjcmliZXImZXhwaXJlX3RpbWU9MTYzOTY2NTE1MSZjb25uZWN0aW9uX2RhdGE9U3Vic2NyaWJlciZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ=="}
@@ -408,7 +441,13 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           streamProperties={streamProperties}
           
            />
-         </OTSession>
+         </OTSession> */}
+
+            <AgoraUIKit rtcProps={rtcProps} 
+                      callbacks={callbacks} 
+                      styleProps={styleProps}
+                    
+                      />
          </View>
 
         
@@ -438,13 +477,14 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
             </View>
             :
             <View> 
-            <Story
+          
+             <Story
             onImageLoaded={onImageLoaded}
             pause={isPause}
             isNewStory={props.isNewStory}
             onVideoLoaded={onVideoLoaded}
             story={story}
-          />
+          />  
           
           {loading()}
           
