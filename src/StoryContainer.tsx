@@ -28,8 +28,10 @@ import ProgressArray from "./ProgressArray";
 import { StoriesType, StoryType } from ".";
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
  import EmojiSelector from 'react-native-emoji-selector'
- import AgoraUIKit from 'agora-rn-uikit';
 
+
+ import AgoraUIKit from 'agora-rn-uikit';
+// import RtmEngine from 'agora-react-native-rtm';
 import { style } from "styled-system";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -63,7 +65,8 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   const [messages,setMessages] = useState([]);
   const [chatDataObj,setChatDataObj] = useState([]);
   const [streamProperties, setStreamProperties] = useState({});
-
+  
+  const client = useState(null);//new RtmEngine()
   const [text,setText] = useState();
 
   //const sessionRef = useRef<typeof OTSession>(null);
@@ -140,6 +143,29 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
   
   
  
+  
+
+  const sendSignalAgora = () =>{
+
+    const channel = useRef(client.createChannel("channelId")).current;
+
+ 
+    messages.forEach((message: any) => {
+      channel
+        .sendChannelMessage({
+          channel,
+          message: `${message}`,
+        })
+        .then(() => {
+         alert('send message');
+           
+        })
+        .catch(() => {
+          alert('send failured');
+        });
+    });
+  
+  }
   const sendSignal =  () => {
 
   //  setMessages(oldvalue => [commentText,...oldvalue] );
@@ -231,8 +257,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     role:2,
     enableAudio:false,
     activeSpeaker:false,
-    layout:1
-
+    
   };
 
   const callbacks = {
@@ -243,7 +268,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
    const styleProps={
     UIKitContainer:{
          borderWidth:1,
-        borderColor:'red',
+       // borderColor:'red',
          marginTop:'15%',
          height: '80%', 
          width: '100%'
@@ -260,7 +285,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
     subscribeToVideo: true,
   };
 
- 
+  
 
   const subscriberEventHandlers = {
     connected(event) {
@@ -378,11 +403,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
           })
 
           }
-         
           
-      
-    
-      
      
  
       {
@@ -397,7 +418,7 @@ const StoryContainer: React.FC<Props> = (props: Props) => {
                   style={styles.textbox}/> 
                 </View>
                 <TouchableOpacity
-                onPress={() => {  sendSignal() }}>
+                onPress={() => {  sendSignalAgora() }}>
                 <Image source={require("./imgs/send-arrow-green.png")} />
                 </TouchableOpacity>
                   

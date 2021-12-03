@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import Video from 'react-native-video';
 // import Image from 'react-native-scalable-image';
 import PropTypes from 'prop-types';
@@ -28,8 +28,12 @@ const Story = (props: Props) => {
       <View style={styles.loading}>
         <ActivityIndicator color="white" />
       </View>
-      )} */}
-      {type === 'image' ? (
+      )} 
+        {type === 'image' ? (
+          url[0].indexOf(".mp4")
+      */}
+ 
+      {url[0].indexOf(".mp4") ==-1 ? (
         <Image
           source={{uri: url[0]}}
           onLoadEnd={props.onImageLoaded}
@@ -40,7 +44,7 @@ const Story = (props: Props) => {
         />
       ) : (
         <Video
-          source={{uri: url}}
+          source={{uri: url[0]}}
           paused={props.pause || props.isNewStory}
           onLoad={item => {
             const {width, height} = item.naturalSize;
@@ -49,9 +53,9 @@ const Story = (props: Props) => {
             setIsPortation(height > width);
             setHeightScaled(heightScaled);
             props.onVideoLoaded(item);
-
-            console.warn(width, height, heightScaled);
-            console.warn('É PAISAGEM?', isPortrait);
+              
+            //console.warn(width, height, heightScaled);
+           // console.warn('É PAISAGEM?', isPortrait);
           }}
           style={
             isPortation
